@@ -4,6 +4,7 @@ import { Platform, View, TouchableOpacity, Alert } from "react-native";
 import * as ImagePicker from "expo-image-picker";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useRouter } from "expo-router";
+import { useTheme } from "react-native-paper";
 
 const DefaultTabBarButton = (props: any) => (
   <TouchableOpacity
@@ -23,6 +24,7 @@ const DefaultTabBarButton = (props: any) => (
 export default function TabLayout() {
   const insets = useSafeAreaInsets();
   const router = useRouter();
+  const { colors } = useTheme();
 
   const promptUser = () => {
     Alert.alert(
@@ -71,6 +73,7 @@ export default function TabLayout() {
         headerShown: false,
         tabBarShowLabel: false,
         tabBarStyle: {
+          backgroundColor: colors.surface,
           // paddingTop: insets.top, //Platform.OS === "android" ? 10 : 0, // tweak as needed
           paddingBottom: insets.bottom, //Platform.OS === "android" ? 100 : 10, // tweak as needed
           height: 70 + insets.bottom, // make it tall enough to avoid being overlapped
@@ -97,7 +100,7 @@ export default function TabLayout() {
                 flex: 1,
               }}
             >
-              <Ionicons name="home-outline" size={24} color={color} />
+              <Ionicons name="home-outline" size={24} color={colors.primary} />
             </View>
           ),
         }}
