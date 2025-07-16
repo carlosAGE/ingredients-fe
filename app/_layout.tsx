@@ -1,21 +1,24 @@
 import { Stack } from "expo-router";
-import { PaperProvider } from "react-native-paper";
-import { darkTheme } from "../constants/theme";
+import { PaperProvider, MD3DarkTheme, MD3Theme } from "react-native-paper";
+import { ThemeTypeCustom, darkTheme } from "../constants/theme";
 
-const customTheme = {
+const customTheme: ThemeTypeCustom = {
+  ...MD3DarkTheme,
   dark: true,
   roundness: 4,
   colors: {
+    ...MD3DarkTheme.colors,
     primary: darkTheme.primary,
     background: darkTheme.background,
     surface: darkTheme.surface,
     accent: darkTheme.accent,
     text: darkTheme.text,
-    disabled: darkTheme.muted,
-    placeholder: darkTheme.muted,
-    backdrop: "#000000AA",
-    error: darkTheme.danger,
-    notification: darkTheme.accent,
+    disabled: darkTheme.disabled,
+    placeholder: darkTheme.placeholder,
+    backdrop: darkTheme.backdrop,
+    error: darkTheme.error,
+    notification: darkTheme.notification,
+    border: darkTheme.border,
   },
 };
 

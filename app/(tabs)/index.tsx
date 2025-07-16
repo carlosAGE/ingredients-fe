@@ -1,9 +1,18 @@
-import { Text, View } from "react-native";
+import { ThemedView } from "../../components/ThemedView";
+import { ThemedText } from "../../components/ThemedText";
+import { StyleSheet } from "react-native";
 
 export default function HomeScreen() {
   return (
-    <View>
-      <Text>Home screen</Text>
-    </View>
+    <ThemedView style={styles.container}>
+      <ThemedText>Home screen</ThemedText>
+    </ThemedView>
   );
 }
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    justifyContent: "space-between",
+  },
+});
