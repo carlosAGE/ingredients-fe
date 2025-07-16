@@ -3,9 +3,26 @@ import { Ionicons } from "@expo/vector-icons";
 import { Platform, View, TouchableOpacity, Alert } from "react-native";
 import * as ImagePicker from "expo-image-picker";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { useRouter } from "expo-router";
+
+const DefaultTabBarButton = (props: any) => (
+  <TouchableOpacity
+    {...Object.fromEntries(
+      Object.entries(props).filter(
+        ([key, value]) => !(key === "delayLongPress" && value === null)
+      )
+    )}
+    style={{
+      flex: 1,
+      justifyContent: "center",
+      alignItems: "center",
+    }}
+  />
+);
 
 export default function TabLayout() {
   const insets = useSafeAreaInsets();
+  const router = useRouter();
 
   const promptUser = () => {
     Alert.alert(
@@ -18,8 +35,14 @@ export default function TabLayout() {
             const result = await ImagePicker.launchCameraAsync({
               base64: true,
             });
-            if (!result.canceled)
+            if (!result.canceled) {
               console.log("Camera image", result.assets[0].uri);
+              const image = result.assets[0];
+              router.push({
+                pathname: "/process",
+                params: { base64: image.base64 },
+              });
+            }
           },
         },
         {
@@ -28,8 +51,13 @@ export default function TabLayout() {
             const result = await ImagePicker.launchImageLibraryAsync({
               base64: true,
             });
-            if (!result.canceled)
-              console.log("Library image", result.assets[0].uri);
+            if (!result.canceled) {
+              const image = result.assets[0];
+              router.push({
+                pathname: "/process",
+                params: { base64: image.base64 },
+              });
+            }
           },
         },
         { text: "Cancel", style: "cancel" },
@@ -43,7 +71,7 @@ export default function TabLayout() {
         headerShown: false,
         tabBarShowLabel: false,
         tabBarStyle: {
-          paddingTop: 0,
+          // paddingTop: insets.top, //Platform.OS === "android" ? 10 : 0, // tweak as needed
           paddingBottom: insets.bottom, //Platform.OS === "android" ? 100 : 10, // tweak as needed
           height: 70 + insets.bottom, // make it tall enough to avoid being overlapped
           ...Platform.select({
@@ -51,13 +79,26 @@ export default function TabLayout() {
             android: {},
           }),
         },
+        tabBarIconStyle: {
+          justifyContent: "center",
+          alignItems: "center",
+        },
       }}
     >
       <Tabs.Screen
         name="index"
         options={{
+          tabBarButton: DefaultTabBarButton,
           tabBarIcon: ({ color }) => (
-            <Ionicons name="home-outline" size={24} color={color} />
+            <View
+              style={{
+                justifyContent: "center",
+                alignItems: "center",
+                flex: 1,
+              }}
+            >
+              <Ionicons name="home-outline" size={24} color={color} />
+            </View>
           ),
         }}
       />
@@ -76,13 +117,13 @@ export default function TabLayout() {
             >
               <View
                 style={{
-                  width: 65,
-                  height: 65,
-                  borderRadius: 32.5,
+                  width: 60,
+                  height: 60,
+                  borderRadius: 30,
                   backgroundColor: "#333",
                   justifyContent: "center",
                   alignItems: "center",
-                  marginBottom: 30,
+                  marginBottom: 0,
                 }}
               >
                 <Ionicons name="camera" size={28} color="white" />
@@ -94,6 +135,7 @@ export default function TabLayout() {
       <Tabs.Screen
         name="profile"
         options={{
+          tabBarButton: DefaultTabBarButton,
           tabBarIcon: ({ color }) => (
             <Ionicons name="person-outline" size={24} color={color} />
           ),
