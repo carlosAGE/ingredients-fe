@@ -24,7 +24,10 @@ export default function ProcessScreen() {
           body: JSON.stringify({ imageBase64: base64 }),
         });
 
-        const data = await res.json();
+        const { success, data, scanId } = await res.json();
+        if (!success) {
+          throw new Error("Failed to process image");
+        }
         setResult(data);
       } catch (err) {
         console.error("Error processing image:", err);
@@ -35,14 +38,26 @@ export default function ProcessScreen() {
 
     sendImage();
   }, [base64]);
+
   return (
     <ThemedView style={styles.container}>
-      {loading && <ActivityIndicator animating={true} size="large" />}
-      {!loading && base64 && (
-        <Image
-          source={{ uri: `data:image/jpeg;base64,${base64}` }}
-          style={styles.image}
-        />
+      {base64 && (
+        <ScrollView contentContainerStyle={styles.scrollContent}>
+          <Image
+            source={{ uri: `data:image/jpeg;base64,${base64}` }}
+            style={styles.image}
+          />
+          {loading ? (
+            <ActivityIndicator size="large" color="#6200ee" />
+          ) : result ? (
+            <>
+              <ThemedText>Scan Result:</ThemedText>
+              <ThemedText>{JSON.stringify(result, null, 2)}</ThemedText>
+            </>
+          ) : (
+            <ThemedText>No result found.</ThemedText>
+          )}
+        </ScrollView>
       )}
       {!loading && !base64 && <ThemedText>No image found.</ThemedText>}
       <BottomNavBar />

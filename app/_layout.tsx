@@ -25,12 +25,25 @@ const customTheme: ThemeTypeCustom = {
 export default function RootLayout() {
   return (
     <PaperProvider theme={customTheme}>
-      <Stack
-        screenOptions={{
-          headerShown: false,
-          contentStyle: { backgroundColor: customTheme.colors.background },
-        }}
-      />
+      <Stack>
+        <Stack.Screen
+          name="(tabs)"
+          options={{
+            headerShown: false,
+            contentStyle: { backgroundColor: customTheme.colors.background },
+          }}
+        />
+        <Stack.Screen
+          name="upload"
+          options={{
+            // presentation: "modal", // <-- THIS MAKES IT A POPUP
+            presentation: "transparentModal",
+            animation: "slide_from_bottom", // or 'slide_from_bottom' for a sheet-like feel
+            headerShown: false, // ✅ Hides default header for clean popup
+            // title: "Upload Files",
+          }}
+        />
+      </Stack>
     </PaperProvider>
   );
 }

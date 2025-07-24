@@ -5,6 +5,8 @@ import * as ImagePicker from "expo-image-picker";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useRouter } from "expo-router";
 import { useTheme } from "react-native-paper";
+import { useState } from "react";
+import { ThemedText } from "../../components/ThemedText";
 
 const DefaultTabBarButton = (props: any) => (
   <TouchableOpacity
@@ -26,7 +28,14 @@ export default function TabLayout() {
   const router = useRouter();
   const { colors } = useTheme();
 
+  const [isProcessingImage, setIsProcessingImage] = useState(false);
+
   const promptUser = () => {
+    console.log("Prompting user for image selection");
+    if (Platform.OS === "web") {
+      Alert.alert("Image selection is not supported on web.");
+      return;
+    }
     Alert.alert(
       "Select Image Source",
       "Choose how you'd like to add an image:",
@@ -37,9 +46,12 @@ export default function TabLayout() {
             const result = await ImagePicker.launchCameraAsync({
               base64: true,
             });
+            setIsProcessingImage(true);
             if (!result.canceled) {
               console.log("Camera image", result.assets[0].uri);
               const image = result.assets[0];
+
+              setIsProcessingImage(false);
               router.push({
                 pathname: "/process",
                 params: { base64: image.base64 },
@@ -53,7 +65,10 @@ export default function TabLayout() {
             const result = await ImagePicker.launchImageLibraryAsync({
               base64: true,
             });
+            setIsProcessingImage(true);
+
             if (!result.canceled) {
+              setIsProcessingImage(false);
               const image = result.assets[0];
               router.push({
                 pathname: "/process",
@@ -88,6 +103,10 @@ export default function TabLayout() {
         },
       }}
     >
+      <ThemedText style={{}}>
+        {isProcessingImage ? "Processing..." : "Ready to scan!"}
+      </ThemedText>
+
       <Tabs.Screen
         name="index"
         options={{
@@ -105,7 +124,29 @@ export default function TabLayout() {
           ),
         }}
       />
+
       <Tabs.Screen
+        name="fake-upload" // dummy screen (won't navigate)
+        options={{
+          tabBarButton: () => (
+            <TouchableOpacity
+              onPress={() => router.push("/upload")} // opens modal
+              style={{
+                width: 60,
+                height: 60,
+                borderRadius: 30,
+                backgroundColor: "#333",
+                justifyContent: "center",
+                alignItems: "center",
+                marginBottom: 20, // move it above tab bar
+              }}
+            >
+              <Ionicons name="cloud-upload" size={28} color="white" />
+            </TouchableOpacity>
+          ),
+        }}
+      />
+      {/* <Tabs.Screen
         name="camera"
         options={{
           tabBarButton: (props) => (
@@ -116,7 +157,7 @@ export default function TabLayout() {
                     !(key === "delayLongPress" && value === null)
                 )
               )}
-              onPress={promptUser}
+              // onPress={promptUser}
             >
               <View
                 style={{
@@ -134,7 +175,8 @@ export default function TabLayout() {
             </TouchableOpacity>
           ),
         }}
-      />
+      /> */}
+
       <Tabs.Screen
         name="profile"
         options={{
