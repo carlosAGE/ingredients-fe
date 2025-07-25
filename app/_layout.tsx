@@ -25,7 +25,14 @@ const customTheme: ThemeTypeCustom = {
 export default function RootLayout() {
   return (
     <PaperProvider theme={customTheme}>
-      <Stack>
+      <Stack
+        screenOptions={{
+          headerShown: false, // ✅ Default for all screens in this stack
+          contentStyle: {
+            backgroundColor: customTheme.colors.background,
+          },
+        }}
+      >
         <Stack.Screen
           name="(tabs)"
           options={{

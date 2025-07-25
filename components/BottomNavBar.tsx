@@ -12,46 +12,6 @@ export default function BottomNavBar() {
   const { colors }: ThemeColors = useTheme();
   const segments = useSegments();
 
-  const promptUser = () => {
-    Alert.alert(
-      "Select Image Source",
-      "Choose how you'd like to add an image:",
-      [
-        {
-          text: "Take Photo",
-          onPress: async () => {
-            const result = await ImagePicker.launchCameraAsync({
-              base64: true,
-            });
-            if (!result.canceled) {
-              const image = result.assets[0];
-              router.push({
-                pathname: "/process",
-                params: { base64: image.base64 },
-              });
-            }
-          },
-        },
-        {
-          text: "Choose from Library",
-          onPress: async () => {
-            const result = await ImagePicker.launchImageLibraryAsync({
-              base64: true,
-            });
-            if (!result.canceled) {
-              const image = result.assets[0];
-              router.push({
-                pathname: "/process",
-                params: { base64: image.base64 },
-              });
-            }
-          },
-        },
-        { text: "Cancel", style: "cancel" },
-      ]
-    );
-  };
-
   return (
     <View
       style={{
@@ -69,11 +29,25 @@ export default function BottomNavBar() {
         right: 0,
       }}
     >
-      <TouchableOpacity onPress={() => router.push("/")}>
+      <TouchableOpacity
+        onPress={() => router.push("/")}
+        style={{
+          flex: 1, // take up equal space like other tabs
+          justifyContent: "center",
+          alignItems: "center",
+        }}
+      >
         <Ionicons name="home-outline" size={24} color={colors.primary} />
       </TouchableOpacity>
 
-      <TouchableOpacity onPress={promptUser}>
+      <TouchableOpacity
+        onPress={() => router.push("/upload")}
+        style={{
+          flex: 1, // take up equal space like other tabs
+          justifyContent: "center",
+          alignItems: "center",
+        }}
+      >
         <View
           style={{
             width: 60,
@@ -88,7 +62,14 @@ export default function BottomNavBar() {
         </View>
       </TouchableOpacity>
 
-      <TouchableOpacity onPress={() => router.push("/profile")}>
+      <TouchableOpacity
+        onPress={() => router.push("/profile")}
+        style={{
+          flex: 1, // take up equal space like other tabs
+          justifyContent: "center",
+          alignItems: "center",
+        }}
+      >
         <Ionicons
           name="person-outline"
           size={24}

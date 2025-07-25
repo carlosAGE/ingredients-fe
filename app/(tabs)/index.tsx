@@ -10,8 +10,8 @@ export default function HomeScreen() {
       style={[
         styles.container,
         {
-          paddingTop: insets.top,
-          paddingHorizontal: insets.left || insets.right,
+          paddingTop: insets.top + 15,
+          paddingHorizontal: (insets.left || insets.right) + 15,
         },
       ]}
     >
